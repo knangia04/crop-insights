@@ -102,9 +102,11 @@ def analyze():
     info = response.json()
     c = 0
     for i in info:
-        if  i['TemperatureMinimum'] != 0 or i['pH_Minimum'] != 0 or i['MatureHeight'] != 0 or i['Precipitation_Minimum'] != 0 or i['Precipitation_Maximum'] != 0 or i['pH_Maximum'] != 0 or i['TemperatureMaximum'] != 0:
-            break
-        c+=1
+        if ['TemperatureMinimum', 'pH_Minimum', 'MatureHeight', 'Precipitation_Minimum', 'Precipitation_Maximum','pH_Maximum', 'TemperatureMaximum'] in list(i.keys()):
+            if int(i['TemperatureMinimum']) != 0 or int(i['pH_Minimum']) != 0 or int(i['MatureHeight']) != 0 or int(i['Precipitation_Minimum']) != 0 or int(i['Precipitation_Maximum']) != 0 or int( i['pH_Maximum']) != 0 or int(i['TemperatureMaximum']) != 0:
+                info = info[c]
+                break
+            c+=1
     try:
         info = info[c] 
     except:
