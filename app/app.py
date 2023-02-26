@@ -2,21 +2,30 @@ from flask import Flask, Response, render_template, url_for, request
 import cv2
 import pickle
 import numpy as np
+import requests
 import pandas as pd
-# import tensorflow.compact.v2 as tf
-# import keras
-# from sklearn.externals import joblib
 
 app = Flask(__name__)
 
 camera = cv2.VideoCapture(0)
+
+
+import requests
+
+url = "https://plants2.p.rapidapi.com/api/plants"
+
+headers = {
+	"Authorization": "GKZOHNZj0xP65kk0BAE2Tl9LGagm0pfD3DFNxAEEZcMQBhRZVDco8vbNJdnwwCo0",
+	"X-RapidAPI-Key": "f792eee498mshce2f349f903dddap1dbd70jsnd9e53c2fe728",
+	"X-RapidAPI-Host": "plants2.p.rapidapi.com"
+}
+
 
 # model = joblib.load_model('cnn_model.pkl')
 
 # model = pickle.load(open('cnn_model.pkl', 'rb'))
 # print(model.predict())
 # print('Model loaded. ')
-
 
 def convert_image_to_array(image_dir):
     try:
@@ -49,6 +58,9 @@ df['target']=c.cat.codes
 model = "my_model.pickle"
 grad = pickle.load(open(model, "rb"))
 
+y = "crop_yield_prediction.pickle"
+yield_model = pickle.load(open(y, "rb"))
+
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -68,7 +80,7 @@ def disease_detection():
 # route for insights page 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    if reqeust.method == 'POST':
+    if request.method == 'POST':
         # get the data from the form 
         N = request.form['N']
         P = request.form['P']
@@ -80,21 +92,54 @@ def analyze():
 
     entry = pd.DataFrame([[N, P, K, temperature, humidity, ph, rainfall]],columns=['N','P','K','temperature','humidity','ph','rainfall'])
     crop_encoded = grad.predict(entry)
-    crop = targets[crop_encoded[0]]
+    crop = targets[crop_encoded[0]] # post processing
+
+    querystring = {"CN":crop}
+
+    response = requests.request("GET", url, headers=headers, params=querystring)
+
+    print(response.text)
+    info = response.json()
+    c = 0
+    for i in info:
+        if  i['TemperatureMinimum'] != 0 or i['pH_Minimum'] != 0 or i['MatureHeight'] != 0 or i['Precipitation_Minimum'] != 0 or i['Precipitation_Maximum'] != 0 or i['pH_Maximum'] != 0 or i['TemperatureMaximum'] != 0:
+            break
+        c+=1
+    try:
+        info = info[c] 
+    except:
+        info = []
 
     # convert the prediction to the correct label after it was encoded 
-    print(targets[crop[0]])
-    return url_for('crop_recommendation')
+    print(crop)
+    return render_template('insights.html', crop=crop.upper(), info=info)
 
 @app.route('/crop_recommendation', methods=['POST', 'GET'])
-def crop_recommendation():
+def insights():
     return render_template('insights.html')
 
-@app.route('/crop_recommendation/<crop>', methods=['POST', 'GET'])
-def crop_recommendation(crop):
-    crop = 'rice'
-    return render_template('insights.html', crop=crop)
 
+
+@app.route('/analyze_yield', methods=['POST'])
+def analyze_yield():
+    if request.method == 'POST':
+         # get the data from the form 
+        rain = request.form['rain']
+        temp = request.form['temp']
+        pesticides = request.form['pesticides'] 
+        print(rain, temp, pesticides)
+
+    e = pd.DataFrame([[rain, pesticides, temp]],columns=['average_rain_fall_mm_per_year','pesticides_tonnes','avg_temp'])
+    pred = yield_model.predict(e)
+
+    # convert the prediction to the correct label after it was encoded 
+    print(pred)
+    return render_template('yield_insights.html', info=pred, rain=rain, temp=temp, pesticides=pesticides)
+    
+
+@app.route('/yield_prediction', methods=['POST', 'GET'])
+def yield_insights():
+    return render_template('yield_insights.html')
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

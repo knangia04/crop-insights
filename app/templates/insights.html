@@ -1,6 +1,86 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %}Crop Insights{% endblock %}</h1>
-    <h5>Enter the information for data driven insights </h5>
+<h1>{% block title %}Crop Insights{% endblock %}</h1>
+<h5>Enter the information for data driven insights </h5>
+
+<style>
+    .card{
+        margin-top: 4%;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                     
+                <form action="/analyze" method="post">
+                    <p>Enter N-P-K contents of Fertilizer that is used</p>
+                    <p>N: Nitrogen <input type="number" max="1000" name="N" placeholder="Nitrogen Content" required />
+                    </p>
+                    <p>P: Phosphorus <input type="number" max="1000" name="P" placeholder="Phosphorus Content"
+                            required /></p>
+                    <p>K: Potassium <input type="number" max="1000" name="K" placeholder="Potassium Content" required />
+                    </p>
+                    <p>Enter the Temperature, Humidity, pH, and Rainfall</p>
+                    <p>Temperature <input type="tect" max="60" name="temperature" placeholder="Temperature in C"
+                            required /></p>
+                    <p>Humidity <input type="text" max="100" name="humidity" placeholder="Humidity" required /></p>
+                    <p>pH <input type="text" max="14" name="ph" placeholder="pH of Soil" required /></p>
+                    <p>Rainfall <input type="text" max="250000" name="rainfall" placeholder="Rainfall in mm/yr"
+                            required /></p>
+                    <p><input type="submit" value="Submit" /></p>
+                </form>
+
+                     
+            </div>
+        </div>
+      
+            </div>
+
+
+         
+
+            <div class="col">
+                
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        {% if crop %}
+                        
+                        <h1>Crop Recommendation: </h1>
+                        <h3> {{ crop }} </h3>
+                        <h5>As per the specifications of your farm and region, the optimal crop to grow is {{ crop }}. It will grow the best in this area without using draining the environment of resources.</h5>
+                        <h5>For more information on {{ crop }}, click <a href="https://www.google.com/search?q={{ crop }}+information">here</a></h5>
+                        
+        
+                        {% if info %}
+                            <h1>Information on {{ crop }}: </h1>
+                            <h3> Mature Height (cm): {{ info['MatureHeight'] }} </h3>
+                            <h3> pH Range: {{ info['pH_Minimum'] }} to {{ info['pH_Maximum'] }} </h3>
+                            <h3> Temperature Minimum (C): {{ info['TemperatureMinimum'] }} </h3>
+                            <h3> Precipitation Rage (mm/yr): {{ info['Precipitation_Minimum'] }} to {{ info['Precipitation_Maximum'] }} </h3>
+                            <h3> Planting Densite Range (cm^2): {{ info['Min_PlantingDensity'] }} to {{ info['Max_PlantingDensity'] }} </h3>
+                            <h3> Root Minimum Depth (cm): {{ info['RootDepthMinimum'] }} </h3>
+                        {% endif %}
+        
+    
+                        
+                    </div>
+                  </div>
+                  {% else %}
+
+                  <h3>Enter the parameters in box to the right to see insights</h3>
+            
+                  {% endif %}
+
+               
+
+            </div>
+        </div>
+</body>
 {% endblock %}

@@ -12,7 +12,9 @@ from sklearn.preprocessing import MinMaxScaler
 
 df=pd.read_csv('Crop_recommendation.csv')
 df.head()
+print(df.max())
 
+quit()
 c=df.label.astype('category')
 targets = dict(enumerate(c.cat.categories))
 df['target']=c.cat.codes

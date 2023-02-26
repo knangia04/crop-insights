@@ -14,7 +14,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md navbar-light bg-light">
+  <nav class="navbar navbar-expand-md navbar-light bg-light" style="margin-bottom: 2%;">
     <a class="navbar-brand" href="{{ url_for('index')}}">CropInsights</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,18 +26,25 @@
           <a class="nav-link" href="/">Home</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" href="/insights">Insights</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="/disease_detection">Disease Detection</a>
-    </li>
-    <li class="nav-item active">
-      <a class="nav-link" href="/resources">Sustainable Practices</a>
-  </li>
+          <a class="nav-link" href="/crop_recommendation">Crop Recommendation</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/yield_prediction">Yield Prediction</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/disease_detection">Disease Detection</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/resources">Sustainable Practices</a>
+        </li>
+        <li class="nav-item active">
+          <img src="./static/img.png" alt="Logo image">
+        </li>
       </ul>
       </ul>
     </div>
   </nav>
+
   <div class="container">
     {% block content %} {% endblock %}
   </div>
@@ -55,4 +62,8 @@
     crossorigin="anonymous"></script>
 </body>
 
+<footer>
+<br>
+<br>
+</footer>
 </html>
