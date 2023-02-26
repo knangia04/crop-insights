@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %}Crop Insights{% endblock %}</h1>
+<h5>Enter the information for data driven insights </h5>
+
+<style>
+    .card {
+        margin-top: 4%;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+
+                        <form action="/analyze_yield" method="post">
+                            <p>Enter the Average Temperature, Pesticide Usage, and Rainfall</p>
+                            <p>Average Temperature <input type="text" max="1000" name="temp"
+                                    placeholder="Average Temp in C" required /></p>
+                            <p>Pesticide Usage <input type="text" max="60" name="pesticides"
+                                    placeholder="Pesticide Usage in Tonnes" required /></p>
+                            <p>RainFall <input type="text" max="100" name="rain" placeholder="Rainfall in mm/yr"
+                                    required /></p>
+                            <p><input type="submit" value="Submit" /></p>
+                        </form>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+            <div class="col">
+                
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+
+                        {% if info %}
+
+                        <h1>Predicted Yield  </h1>
+                        <h3> Average Temperature (C): {{ temp }} </h3>
+                        <h3> Pesticide (tonnes): {{ pesticides }} </h3>
+                        <h3> Rainfall (mm/yr): {{ rain }} </h3>
+                        <h3> Predicted Crop Yeild: {{ info[0] }} </h3>
+            
+
+                        {% else %}
+
+                        <h3>Enter the parameters in box to the right to see insights</h3>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</body>
+{% endblock %}

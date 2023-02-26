@@ -1,0 +1,6 @@
+0 Gray leaf maize
+1 Common rust maize
+2 Healthy maize
+3 Healthy strawberry
+4 Leaf scorch strawberry
+5 Northern Leaf Blight Maize
